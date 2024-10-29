@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {initialWorkouts, generateWorkout} from "./workouts.js"
 import "./App.css"
 
@@ -7,19 +7,19 @@ function App() {
   const [workouts, setWorkouts] = useState(initialWorkouts);
   const [showDoneOnly, setShowDoneOnly] = useState(false);
 
-  useEffect(() => {
-    console.log("workouts: ", workouts);
-    console.log("showDone: ", showDoneOnly);
-  }, [workouts, showDoneOnly]);
-
   const addNewWorkout = () => {
-    const newWorkout = generateWorkout()
+    const newWorkout = generateWorkout();
     setWorkouts([...workouts, newWorkout]);
-    console.log("addNewWorkout:", newWorkout)
+  };
+
+  const replaceWorkout = (workoutToReplace) => {
+    const newWorkout = generateWorkout();
+    const updatedWorkouts = workouts.map(workout => 
+      workout === workoutToReplace ? newWorkout : workout);
+    setWorkouts(updatedWorkouts);
   };
 
   const deleteWorkout = (workoutToDelete) => {
-    console.log("deleteWorkout:", workoutToDelete)
     const updatedWorkouts = workouts.filter(workout => workout !== workoutToDelete);
     setWorkouts(updatedWorkouts);
   };
@@ -30,7 +30,6 @@ function App() {
       {...workout, done: true} : workout
     )
     setWorkouts(updatedWorkouts);
-    console.log("completeWorkout:", workoutToComplete);
   };
 
   const showDone = () => {
@@ -62,6 +61,7 @@ function App() {
             {workout.done &&
               <p>✅</p>}
             <button onClick={e=>deleteWorkout(workout)}>Delete</button>
+            <button onClick={e=>replaceWorkout(workout)}>Replace</button>
           </li>
         ))}
       </ul>
